@@ -1,21 +1,19 @@
 package com.project.paymebuddy.backend.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.util.Pair;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "operation")
 public class Operation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "operation_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -32,14 +30,4 @@ public class Operation {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
-
-    @Column(name = "initiator_id")
-    private Long initiatorId;
-
-    @Column(name = "target_id")
-    private Long targetId;
-
-    public Pair<Account, Account> getTransferAccounts() {
-        return null;
-    }
 }

@@ -1,27 +1,28 @@
 package com.project.paymebuddy.backend.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Setter
-@Getter
+@Data
+@Builder
 @Entity
-@Table(name = "pay_my_buddy_user")
+@Table(name = "pay_my_buddy_user",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email")
+        })
 public class PayMyBuddyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pay_my_buddy_user_id")
     private Long id;
 
     private String email;
     private String password;
 
-    @ManyToOne
-    private PayMyBuddyUser parent;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    private List<PayMyBuddyUser> connectionList;
+    @OneToMany(mappedBy = "payMyBuddyUser")
+    private List<Connection> myConnections;
 }
