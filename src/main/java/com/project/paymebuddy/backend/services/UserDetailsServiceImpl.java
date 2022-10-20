@@ -2,14 +2,19 @@ package com.project.paymebuddy.backend.services;
 
 import com.project.paymebuddy.backend.entities.PayMyBuddyUser;
 import com.project.paymebuddy.backend.repositories.PayMyBuddyUserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-public record UserDetailsServiceImpl(
-        PayMyBuddyUserRepository userRepository) implements UserDetailsService {
+@Service
+@AllArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    final PayMyBuddyUserRepository userRepository;
 
     @Override
     @Transactional

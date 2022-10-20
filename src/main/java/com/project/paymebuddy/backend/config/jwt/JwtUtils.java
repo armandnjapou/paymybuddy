@@ -16,7 +16,7 @@ public class JwtUtils {
     @Value("${paymybuddy.backend.jwt-secret}")
     private String jwtSecret;
 
-    @Value("${paymybuddy.backend.expries-in}")
+    @Value("${paymybuddy.backend.expires-in}")
     private int jwtExpiresIn;
 
     public String generateJwtToken(Authentication authentication) {
