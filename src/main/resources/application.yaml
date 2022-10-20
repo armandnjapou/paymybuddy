@@ -6,6 +6,7 @@ spring:
     username: root
     password: ""
   jpa:
+    database: mysql
     properties:
       hibernate:
         format_sql: true
@@ -17,3 +18,9 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
+paymybuddy:
+  backend:
+    jwt-secret: cmFuZG9tU2VjcmV0
+    expires-in: 600000
+
