@@ -1,5 +1,6 @@
 package com.project.paymebuddy.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,8 @@ public class PayMyBuddyUser {
 
     private String name;
     private String username;
+
+    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "payMyBuddyUser")

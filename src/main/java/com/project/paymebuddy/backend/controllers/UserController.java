@@ -3,13 +3,17 @@ package com.project.paymebuddy.backend.controllers;
 
 import com.project.paymebuddy.backend.config.jwt.JwtUtils;
 import com.project.paymebuddy.backend.dtos.UserDTO;
+import com.project.paymebuddy.backend.entities.Account;
 import com.project.paymebuddy.backend.entities.AppRole;
 import com.project.paymebuddy.backend.entities.PayMyBuddyUser;
 import com.project.paymebuddy.backend.entities.Role;
+import com.project.paymebuddy.backend.exceptions.DomainException;
+import com.project.paymebuddy.backend.repositories.AccountRepository;
 import com.project.paymebuddy.backend.repositories.PayMyBuddyUserRepository;
 import com.project.paymebuddy.backend.repositories.RoleRepository;
 import com.project.paymebuddy.backend.services.UserDetailsImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +43,8 @@ public class UserController {
     final AuthenticationManager authenticationManager;
 
     final PayMyBuddyUserRepository userRepository;
+
+    final AccountRepository accountRepository;
 
     final RoleRepository roleRepository;
 
@@ -58,27 +67,17 @@ public class UserController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return ResponseEntity.ok(new UserDTO.JwtResponse(
-                jwt,
-                BEARER_TOKEN,
-                userDetails.id(),
-                userDetails.name(),
-                userDetails.getUsername(),
-                userDetails.getPassword(),
-                roles));
+        return ResponseEntity.ok(new UserDTO.JwtResponse(jwt, BEARER_TOKEN, userDetails.id(), userDetails.name(), userDetails.getUsername(), userDetails.getPassword(), roles));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDTO.MessageResponse> registerUser(@RequestBody UserDTO.SignupRequest signUpRequest) {
+    public ResponseEntity<PayMyBuddyUser> registerUser(@RequestBody UserDTO.SignupRequest signUpRequest) {
         Optional<PayMyBuddyUser> existUser = userRepository.findByUsername(signUpRequest.username());
 
         if (existUser.isPresent()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new UserDTO.MessageResponse("Error: Email is already in use!"));
+            throw new DomainException(DomainException.Severity.LOGIC, DomainException.Code.NOT_FOUND, "Resource not found!");
         }
 
-        // Create new user's account
         PayMyBuddyUser user = new PayMyBuddyUser();
         user.setName(signUpRequest.name());
         user.setUsername(signUpRequest.username());
@@ -91,8 +90,11 @@ public class UserController {
         } else roles.add(new Role(AppRole.USER));
 
         user.setRoles(roles);
-        userRepository.save(user);
+        PayMyBuddyUser savedUser = userRepository.save(user);
+        Account account = new Account(new BigDecimal(BigInteger.ZERO), LocalDateTime.now());
+        account.setUser(savedUser);
+        accountRepository.save(account);
 
-        return ResponseEntity.ok(new UserDTO.MessageResponse("User registered successfully!"));
+        return new ResponseEntity<>(savedUser, HttpStatus.OK);
     }
 }
