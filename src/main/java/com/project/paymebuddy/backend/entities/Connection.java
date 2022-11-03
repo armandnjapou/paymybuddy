@@ -14,9 +14,7 @@ public class Connection {
     @Column(name = "connection_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "pay_my_buddy_user_id")
-    private PayMyBuddyUser payMyBuddyUser;
+    private Long targetId;
 
     @Column(name = "connection_date")
     private LocalDateTime connectionDate;
