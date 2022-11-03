@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -25,11 +26,26 @@ public class PayMyBuddyUser {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sender", targetEntity = Connection.class)
+    private Set<PayMyBuddyUser> connections = new HashSet<>();
+
+    @OneToMany(mappedBy = "target", targetEntity = Connection.class)
+    private Set<PayMyBuddyUser> connectedTo = new HashSet<>();
+
+/*    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "user_connection",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "connection_id"))
-    private Set<Connection> connections;
+    private Set<PayMyBuddyUser> connections = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinTable(name = "user_connection",
+            joinColumns = @JoinColumn(name = "connection_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<PayMyBuddyUser> connectedTo = new HashSet<>();*/
+
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "user_roles",
