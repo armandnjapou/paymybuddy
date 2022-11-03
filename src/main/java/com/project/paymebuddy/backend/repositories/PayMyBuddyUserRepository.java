@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface PayMyBuddyUserRepository extends JpaRepository<PayMyBuddyUser, Long> {
     Optional<PayMyBuddyUser> findByUsername(String username);
+    Optional<PayMyBuddyUser> findById(Long id);
 }
