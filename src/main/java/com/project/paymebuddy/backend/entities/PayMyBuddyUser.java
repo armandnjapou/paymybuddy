@@ -17,7 +17,6 @@ public class PayMyBuddyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pay_my_buddy_user_id")
     private Long id;
 
     private String name;
@@ -26,30 +25,23 @@ public class PayMyBuddyUser {
     @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "sender", targetEntity = Connection.class)
+    @OneToMany
+    @JoinColumn(name = "sender")
     private Set<PayMyBuddyUser> connections = new HashSet<>();
 
-    @OneToMany(mappedBy = "target", targetEntity = Connection.class)
+    @OneToMany
+    @JoinColumn(name = "target")
+    @JsonIgnore
     private Set<PayMyBuddyUser> connectedTo = new HashSet<>();
-
-/*    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "user_connection",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "connection_id"))
-    private Set<PayMyBuddyUser> connections = new HashSet<>();
-
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "user_connection",
-            joinColumns = @JoinColumn(name = "connection_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<PayMyBuddyUser> connectedTo = new HashSet<>();*/
-
-
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JsonIgnore
     private Set<Role> roles;
+
+    public void addConnection(PayMyBuddyUser target) {
+        this.connections.add(target);
+    }
 }
