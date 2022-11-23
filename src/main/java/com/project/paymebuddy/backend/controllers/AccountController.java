@@ -3,6 +3,7 @@ package com.project.paymebuddy.backend.controllers;
 import com.project.paymebuddy.backend.entities.PayMyBuddyUser;
 import com.project.paymebuddy.backend.repositories.AccountRepository;
 import com.project.paymebuddy.backend.repositories.PayMyBuddyUserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import static com.project.paymebuddy.backend.utils.Constants.API_V1_PATH;
 @RestController
 @RequestMapping(API_V1_PATH + "/accounts")
 @AllArgsConstructor
+@SecurityRequirement(name = "backendapi")
 public class AccountController {
 
     final AccountRepository accountRepository;
