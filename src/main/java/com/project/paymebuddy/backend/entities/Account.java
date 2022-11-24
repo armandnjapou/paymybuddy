@@ -1,5 +1,6 @@
 package com.project.paymebuddy.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,7 @@ public class Account {
 
     @OneToOne
     @JoinColumn(name= "user_id")
+    @JsonIgnore
     private PayMyBuddyUser user;
 
     public Account(BigDecimal balance) {

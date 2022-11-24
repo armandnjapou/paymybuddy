@@ -2,7 +2,7 @@ package com.project.paymebuddy.backend.controllers;
 
 
 import com.project.paymebuddy.backend.config.jwt.JwtUtils;
-import com.project.paymebuddy.backend.dtos.UserDTO;
+import com.project.paymebuddy.backend.dtos.PayMyBuddyDto;
 import com.project.paymebuddy.backend.entities.Account;
 import com.project.paymebuddy.backend.entities.AppRole;
 import com.project.paymebuddy.backend.entities.PayMyBuddyUser;
@@ -53,7 +53,7 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<UserDTO.JwtResponse> authenticateUser(@RequestBody UserDTO.LoginRequest loginRequest) {
+    public ResponseEntity<PayMyBuddyDto.JwtResponse> authenticateUser(@RequestBody PayMyBuddyDto.LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
@@ -65,11 +65,11 @@ public class AuthController {
 
         PayMyBuddyUser user = userRepository.findById(userDetails.id()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return ResponseEntity.ok(new UserDTO.JwtResponse(jwt, BEARER_TOKEN, user));
+        return ResponseEntity.ok(new PayMyBuddyDto.JwtResponse(jwt, BEARER_TOKEN, user));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<PayMyBuddyUser> registerUser(@RequestBody UserDTO.SignupRequest signUpRequest) {
+    public ResponseEntity<PayMyBuddyUser> registerUser(@RequestBody PayMyBuddyDto.SignupRequest signUpRequest) {
         Optional<PayMyBuddyUser> existUser = userRepository.findByUsername(signUpRequest.username());
 
         if (existUser.isPresent()) {

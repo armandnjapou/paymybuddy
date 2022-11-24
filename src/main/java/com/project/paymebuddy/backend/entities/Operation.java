@@ -1,5 +1,6 @@
 package com.project.paymebuddy.backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,5 +30,6 @@ public class Operation {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
 }
