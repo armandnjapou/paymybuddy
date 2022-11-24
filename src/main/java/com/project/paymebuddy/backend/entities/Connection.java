@@ -22,6 +22,6 @@ public class Connection {
     @JoinColumn(name = "target_id")
     PayMyBuddyUser target;
 
-    @Column(name = "connection_date")
+    @Column(name = "connection_date", nullable = false)
     private LocalDateTime connectionDate;
 }

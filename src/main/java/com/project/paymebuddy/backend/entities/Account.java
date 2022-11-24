@@ -19,12 +19,13 @@ public class Account {
     @Column(name = "account_id")
     private Long id;
 
+    @Column(nullable = false)
     private BigDecimal balance;
 
     @OneToMany(mappedBy = "account")
     private List<Operation> operations;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @OneToOne

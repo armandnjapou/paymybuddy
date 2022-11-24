@@ -20,6 +20,7 @@ public class Transfer {
 
     private String description;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(name = "target_id")

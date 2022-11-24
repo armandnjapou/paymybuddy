@@ -23,6 +23,7 @@ public class Operation {
 
     private String description;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(name = "execution_date")
