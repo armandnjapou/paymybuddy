@@ -1,11 +1,13 @@
 package com.project.paymebuddy.backend.entities;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "connection")
 public class Connection {
@@ -16,12 +18,15 @@ public class Connection {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
-    PayMyBuddyUser sender;
+    private PayMyBuddyUser sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id")
-    PayMyBuddyUser target;
+    private PayMyBuddyUser target;
 
     @Column(name = "connection_date", nullable = false)
     private LocalDateTime connectionDate;
+    
+    public Connection() {
+    }
 }

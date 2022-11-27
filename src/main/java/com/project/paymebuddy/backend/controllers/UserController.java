@@ -5,12 +5,12 @@ import com.project.paymebuddy.backend.entities.PayMyBuddyUser;
 import com.project.paymebuddy.backend.exceptions.DomainException;
 import com.project.paymebuddy.backend.repositories.ConnectionRepository;
 import com.project.paymebuddy.backend.repositories.PayMyBuddyUserRepository;
+import com.project.paymebuddy.backend.services.ConnectionServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import static com.project.paymebuddy.backend.utils.Constants.API_V1_PATH;
@@ -18,7 +18,7 @@ import static com.project.paymebuddy.backend.utils.Constants.API_V1_PATH;
 @RestController
 @RequestMapping(API_V1_PATH + "/users")
 @SecurityRequirement(name = "backendapi")
-public record UserController(PayMyBuddyUserRepository userRepository, ConnectionRepository connectionRepository) {
+public record UserController(PayMyBuddyUserRepository userRepository, ConnectionRepository connectionRepository, ConnectionServiceImpl connectionService) {
 
     @GetMapping("/")
     public ResponseEntity<Object> getAll() {
@@ -31,30 +31,19 @@ public record UserController(PayMyBuddyUserRepository userRepository, Connection
     }
 
     @GetMapping("/{userId}/addConnection")
-    public ResponseEntity<Object> addConnection(@PathVariable Long userId, @RequestParam String targetEmail) {
+    public ResponseEntity<Connection> addConnection(@PathVariable Long userId, @RequestParam String targetEmail) {
 
         PayMyBuddyUser sender = userRepository.findById(userId).orElseThrow(() -> new DomainException(DomainException.Severity.LOGIC, DomainException.Code.NOT_FOUND, "Sender not found!"));
         PayMyBuddyUser target = userRepository.findByUsername(targetEmail).orElseThrow(() -> new DomainException(DomainException.Severity.LOGIC, DomainException.Code.NOT_FOUND, "Target not found!"));
 
-        if(!sender.getConnections().contains(target)) {
-            Connection connection = new Connection();
-            connection.setConnectionDate(LocalDateTime.now());
-            connection.setSender(sender);
-            connection.setTarget(target);
-            connectionRepository.save(connection);
-            sender.addConnection(target);
-
-            PayMyBuddyUser updated = userRepository.save(sender);
-
-            return new ResponseEntity<>(updated, HttpStatus.OK);
-        } else throw new DomainException(DomainException.Severity.LOGIC, DomainException.Code.BAD_REQUEST, "Target already connected");
+        return new ResponseEntity<>(connectionService.addConnection(sender, target), HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/connections")
-    public ResponseEntity<Object> getAllConnections(@PathVariable Long userId) {
+    public ResponseEntity<Set<Connection>> getAllConnections(@PathVariable Long userId) {
         PayMyBuddyUser pmb = userRepository.findById(userId).orElseThrow(() -> new DomainException(DomainException.Severity.LOGIC, DomainException.Code.NOT_FOUND, "User not found with id: " + userId));
-        Set<PayMyBuddyUser> connections = pmb.getConnections();
-        return ResponseEntity.ok(connections);
+
+        return new ResponseEntity<>(connectionService.getConnections(pmb), HttpStatus.OK);
     }
 
 }

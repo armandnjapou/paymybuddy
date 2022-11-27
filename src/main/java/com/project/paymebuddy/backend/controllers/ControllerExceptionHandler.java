@@ -25,7 +25,7 @@ public class ControllerExceptionHandler {
 
         ErrorMessage message = new ErrorMessage(
                 FATAL,
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 LocalDateTime.now(),
                 exception.getMessage(),
                 request.getDescription(false)
