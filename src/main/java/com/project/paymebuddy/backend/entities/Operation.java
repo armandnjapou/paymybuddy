@@ -29,9 +29,9 @@ public class Operation {
     @Column(name = "execution_date")
     private LocalDateTime executionDate;
 
-    @Column(name = "target_id")
-    @JsonIgnore
-    private Long targetId;
+    @ManyToOne
+    @JoinColumn(name= "user_id")
+    private PayMyBuddyUser target;
 
     @ManyToOne
     @JoinColumn(name = "account_id")

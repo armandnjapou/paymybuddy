@@ -80,6 +80,11 @@ public record AccountServiceImpl(AccountRepository accountRepository,
         operation.setDescription(accountOperation.description());
         operationRepository.save(operation);
 
+        if(operationType.equals(OperationType.TRANSFER)) {
+            PayMyBuddyUser target = userRepository.findByUsername(accountOperation.email()).orElseThrow(() -> new DomainException(DomainException.Severity.LOGIC, DomainException.Code.NOT_FOUND, "Target account not found"));
+            operation.setTarget(target);
+        }
+
         return operation;
     }
 
