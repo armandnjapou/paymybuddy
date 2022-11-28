@@ -11,6 +11,6 @@ public interface PayMyBuddyDto {
 
     record JwtResponse(String token, String type, PayMyBuddyUser user){}
 
-    record AccountOperation(double amount, String description){}
+    record AccountOperation(String email, Double amount, String description){}
 
 }

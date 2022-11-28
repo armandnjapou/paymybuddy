@@ -26,7 +26,7 @@ public class Connection {
 
     @Column(name = "connection_date", nullable = false)
     private LocalDateTime connectionDate;
-    
+
     public Connection() {
     }
 }

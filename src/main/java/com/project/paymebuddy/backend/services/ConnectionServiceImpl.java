@@ -37,7 +37,7 @@ public record ConnectionServiceImpl(
         return connections;
     }
 
-    boolean isUserAlreadyConnected(Set<Connection> connections, PayMyBuddyUser user) {
+    static boolean isUserAlreadyConnected(Set<Connection> connections, PayMyBuddyUser user) {
         List<String> usernames =  connections.stream().map(connection -> connection.getSender().getUsername()).toList();
         List<String> targetUsernames = connections.stream().map(connection -> connection.getTarget().getUsername()).toList();
         return usernames.contains(user.getUsername()) || targetUsernames.contains(user.getUsername());

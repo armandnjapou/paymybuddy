@@ -29,6 +29,10 @@ public class Operation {
     @Column(name = "execution_date")
     private LocalDateTime executionDate;
 
+    @Column(name = "target_id")
+    @JsonIgnore
+    private Long targetId;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     @JsonIgnore

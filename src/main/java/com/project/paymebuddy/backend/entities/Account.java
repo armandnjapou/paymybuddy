@@ -33,6 +33,9 @@ public class Account {
     @JsonIgnore
     private PayMyBuddyUser user;
 
+    public Account() {
+    }
+
     public Account(BigDecimal balance) {
         this.balance = balance;
     }

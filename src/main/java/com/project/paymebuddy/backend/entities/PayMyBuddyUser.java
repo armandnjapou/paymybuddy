@@ -1,18 +1,21 @@
 package com.project.paymebuddy.backend.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "pay_my_buddy_user",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username")
         })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PayMyBuddyUser {
 
     @Id
@@ -29,15 +32,6 @@ public class PayMyBuddyUser {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany
-    @JoinColumn(name = "sender")
-    private Set<PayMyBuddyUser> connections = new HashSet<>();
-
-    @OneToMany
-    @JoinColumn(name = "target")
-    @JsonIgnore
-    private Set<PayMyBuddyUser> connectedTo = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -45,7 +39,6 @@ public class PayMyBuddyUser {
     @JsonIgnore
     private Set<Role> roles;
 
-    public void addConnection(PayMyBuddyUser target) {
-        this.connections.add(target);
+    public PayMyBuddyUser() {
     }
 }
